@@ -17,7 +17,7 @@ const constants = require('./src/constants');
 // import { constants } from "./src/constants.js";
 const Itrans = require('./src/Itrans');
 //import { Itrans } from "./src/Itrans.js";
-const DEFAULT_TSV = require('./data/DEFAULT_TSV');
+const DEFAULT_TSV = require('./data/UPDATED_TSV');
 
 const OUTPUT_FORMAT = constants.OUTPUT_FORMAT; // html7, unicodeNames, or utf8
 
@@ -30,7 +30,7 @@ const OUTPUT_ROW_2_ID = 'i-scripts-row-2'; // id of 2nd row of output textareas
 const OUTPUT_CLASS = 'c-output'; // class containing select and  textarea to show output
 const COPY_BUTTON_CLASS = 'copy-button'; // child of c-output used for copy to clipboard
 
-// Tab-Separated-Value spreadsheet contains the itrans tables 
+// Tab-Separated-Value spreadsheet contains the itrans tables
 // Web form for loading custom spreadsheet data from user's local filesystem
 const TSV_FORM_ID = 'i-data'; // form containing the load spreadsheet input
 const TSV_INPUT_ID = 'i-data-input'; // load new spreadsheet TSV from this file name
@@ -53,8 +53,8 @@ const URL_PARAM_SCRIPTS = 's';
  * @property {HTMLTextAreaElement} textElem - displays itrans converted output
  */
 function OutputDiv(selectElem, textElem) {
-  this.selectElem = selectElem;
-  this.textElem = textElem;
+    this.selectElem = selectElem;
+    this.textElem = textElem;
 }
 
 /**
@@ -76,19 +76,18 @@ function OutputDiv(selectElem, textElem) {
  */
 /** @type {Page} */
 const page = {
-  inputTextElem: null,  // getElementById(INPUT_ID)
-  tsvLoadedMessage: null, // getElementById(TSV_INPUT_MESSAGE_ID)
+    inputTextElem: null, // getElementById(INPUT_ID)
+    tsvLoadedMessage: null, // getElementById(TSV_INPUT_MESSAGE_ID)
 
-  outputDivs: [], // getElementsByClassName(OUTPUT_CLASS) child elements
-  itrans: null,
+    outputDivs: [], // getElementsByClassName(OUTPUT_CLASS) child elements
+    itrans: null,
 };
 
 // select element drop-down elements are synced with the spreadsheet languages
 // and some custom names and additions made
-const UNICODE_NAMES_OPTION = {text: 'Unicode names', value: 'unicode-names'};
+const UNICODE_NAMES_OPTION = { text: 'Unicode names', value: 'unicode-names' };
 // TODO match spreadsheet const UNICODE_NAMES_OPTION = {text: 'CODE-NAME', value: 'UNICODE-NAMES'};
 // and match OUTPUT_FORMAT.unicodeNames or use text and value fields like options?
-
 
 /**
  * Runs itrans to convert input text into one output script.
@@ -98,29 +97,30 @@ const UNICODE_NAMES_OPTION = {text: 'Unicode names', value: 'unicode-names'};
  *     to display the output.
  */
 function runItrans(inputText, outputDiv) {
-  const options = {
-    // defaults
-    language: '#sanskrit',
-    outputFormat: 'HTML7'
-  };
-  const outputScript = outputDiv.selectElem.value; // TODO rename to script or say it matches options.language AND use outputDiv.selectElem.value instead
-  if (outputScript === UNICODE_NAMES_OPTION.value) { // 'unicode-names' TODO cap it and remove?
-    options.outputFormat = OUTPUT_FORMAT.unicodeNames; // 'UNICODE-NAMES'
-  } else {
-    options.language = outputScript;
-  }
-  console.log('runItrans', outputDiv.selectElem.value);
-  outputDiv.textElem.innerHTML = page.itrans.convert(inputText, options);
+    const options = {
+        // defaults
+        language: '#sanskrit',
+        outputFormat: 'HTML7',
+    };
+    const outputScript = outputDiv.selectElem.value; // TODO rename to script or say it matches options.language AND use outputDiv.selectElem.value instead
+    if (outputScript === UNICODE_NAMES_OPTION.value) {
+        // 'unicode-names' TODO cap it and remove?
+        options.outputFormat = OUTPUT_FORMAT.unicodeNames; // 'UNICODE-NAMES'
+    } else {
+        options.language = outputScript;
+    }
+    console.log('runItrans', outputDiv.selectElem.value);
+    outputDiv.textElem.innerHTML = page.itrans.convert(inputText, options);
 }
 
 /**
  * Runs itrans to convert input text into all output textareas.
  * Uses outputDivs array from outer scope.
  */
-function runAllItrans () {
-  page.outputDivs.forEach((outputDiv) => {
-    runItrans(page.inputTextElem.value, outputDiv);
-  });
+function runAllItrans() {
+    page.outputDivs.forEach((outputDiv) => {
+        runItrans(page.inputTextElem.value, outputDiv);
+    });
 }
 
 /**
@@ -132,39 +132,55 @@ function runAllItrans () {
  * @param {object} formId - web form that includes the fileId element.
  */
 function loadInputFile(fileId, formId) {
-  if (!fileId || !fileId.files) {
-    return;
-  }
+    if (!fileId || !fileId.files) {
+        return;
+    }
 
-  if (!(window && window.File && window.FileReader && window.FileList && window.Blob)) {
-    formId.reset();
-    alert('Error: This browser does not support file loading (old browser?).');
-    return;
-  }
+    if (
+        !(
+            window &&
+            window.File &&
+            window.FileReader &&
+            window.FileList &&
+            window.Blob
+        )
+    ) {
+        formId.reset();
+        alert(
+            'Error: This browser does not support file loading (old browser?).'
+        );
+        return;
+    }
 
-  const file = fileId.files[0];
-  const {name, type, size} = file || {};
-  console.log('Got loadInput file', name, type, size);
-  if (type && !type.startsWith('text')) {
-    // Sometimes type is undefined, so skip this check in that case.
-    formId.reset();
-    alert('Error: File "' + name + '" is not a text file.');
-    return;
-  }
-  if (size > MAX_TSV_SIZE) {
-    formId.reset();
-    alert('Error: File "' + name + '" is too large. Over ' + MAX_TSV_SIZE/1000 + 'k.');
-    return;
-  }
-  const reader = new FileReader();
-  reader.readAsText(file);
-  reader.onload = ( (event) => {
-    const data = event.target.result;
-    page.inputTextElem.value = data;
-    // Code modified page.inputTextElem does not fire on the events, so
-    // have to do it here.
-    runAllItrans();
-  });
+    const file = fileId.files[0];
+    const { name, type, size } = file || {};
+    console.log('Got loadInput file', name, type, size);
+    if (type && !type.startsWith('text')) {
+        // Sometimes type is undefined, so skip this check in that case.
+        formId.reset();
+        alert('Error: File "' + name + '" is not a text file.');
+        return;
+    }
+    if (size > MAX_TSV_SIZE) {
+        formId.reset();
+        alert(
+            'Error: File "' +
+                name +
+                '" is too large. Over ' +
+                MAX_TSV_SIZE / 1000 +
+                'k.'
+        );
+        return;
+    }
+    const reader = new FileReader();
+    reader.readAsText(file);
+    reader.onload = (event) => {
+        const data = event.target.result;
+        page.inputTextElem.value = data;
+        // Code modified page.inputTextElem does not fire on the events, so
+        // have to do it here.
+        runAllItrans();
+    };
 }
 
 /**
@@ -176,22 +192,25 @@ function loadInputFile(fileId, formId) {
  *     from currently loaded page.itrans.itransTable.languages value.
  */
 function setupLanguagesList(selectElem, languages) {
-  const selected = selectElem.value;
+    const selected = selectElem.value;
 
-  // Remove all existing options
-  selectElem.length = 0;
+    // Remove all existing options
+    selectElem.length = 0;
 
-  // Add all currently loaded languages
-  languages.forEach((language) => {
-    const isSelected = selected == language;
-    const option = new Option(language, language, isSelected, isSelected);
+    // Add all currently loaded languages
+    languages.forEach((language) => {
+        const isSelected = selected == language;
+        const option = new Option(language, language, isSelected, isSelected);
+        selectElem.add(option);
+    });
+
+    // Add in Unicode names language option
+    const option = new Option(
+        UNICODE_NAMES_OPTION.text,
+        UNICODE_NAMES_OPTION.value
+    );
+    option.selected = selected === UNICODE_NAMES_OPTION.value;
     selectElem.add(option);
-  });
-
-  // Add in Unicode names language option
-  const option = new Option(UNICODE_NAMES_OPTION.text, UNICODE_NAMES_OPTION.value);
-  option.selected = selected === UNICODE_NAMES_OPTION.value;
-  selectElem.add(option);
 }
 
 /**
@@ -206,86 +225,103 @@ function setupLanguagesList(selectElem, languages) {
  *
  */
 function setupOutputDivs() {
-  /** @type {HTMLCollection} */
-  const outputs = document.getElementsByClassName(OUTPUT_CLASS);
-  if (!outputs || !outputs.length) {
-    alert('Page invalid: required output elements missing: class: ' + OUTPUT_CLASS);
-    return;
-  }
-  if (!page.itrans) {
-    // Probably an internal error since default tables should always load.
-    alert('Failed to load itrans conversion tables');
-    return;
-  }
-
-  const urlParams = new URLSearchParams(window.location.search);
-  const scriptsIn = urlParams.get(URL_PARAM_SCRIPTS);
-  let scripts = scriptsIn ? scriptsIn.split(',') : [];
-  // Script name args omit # character constants.LANGUAGE_PREFIX, add it back.
-  scripts = scripts.map((s) => {
-    if (s !== UNICODE_NAMES_OPTION.value) {
-      s = constants.LANGUAGE_PREFIX + s;
+    /** @type {HTMLCollection} */
+    const outputs = document.getElementsByClassName(OUTPUT_CLASS);
+    if (!outputs || !outputs.length) {
+        alert(
+            'Page invalid: required output elements missing: class: ' +
+                OUTPUT_CLASS
+        );
+        return;
     }
-    return s;
-  });
-
-  // Remove invalid script names.
-  scripts = scripts.filter((script) => {
-    const table = page.itrans.itransTable;
-    const help = 'Valid names are in default page dropdown list. ' +
-      'Do not include the first # character.\n' +
-      '"unicode-names" is also a valid name.';
-    const pass = table.isLanguage(script) ||
-      script === UNICODE_NAMES_OPTION.value;
-    if (!pass) {
-      const msg = 'Invalid language script name in URL "' + script + '"\n\n' + help;
-      alert(msg);
-      console.assert(false, msg);
+    if (!page.itrans) {
+        // Probably an internal error since default tables should always load.
+        alert('Failed to load itrans conversion tables');
+        return;
     }
-    return pass;
-  });
 
-  // number of output textareas sections to use
-  let useCount = outputs.length;
-  if (scriptsIn) {
-    useCount = Math.min(useCount, scripts.length);
-    console.log('URL scripts', scripts, ', useCount', useCount,
-      ', outputs.length', outputs.length);
-  }
-  // remove any extra output sections on the web page
-  if (outputs.length > useCount) {
-    // HTMLCollection length cannot be reset, so have to loop and remove.
-    const originalLength = outputs.length;
-    for (let i = useCount; i < originalLength; ++i) {
-      outputs[useCount].remove(); // each remove changes HTMLCollection length.
-    }
-  }
-
-  for (let i = 0; i < useCount; i++) {
-    const output = outputs[i];
-    const select = output.getElementsByTagName('select')[0]; // only 1 descendant of this type expected
-    const outputText = output.getElementsByTagName('textarea')[0];
-
-    // Adds all the languages available in the spreadsheet.
-    setupLanguagesList(select, page.itrans.itransTable.languages);
-    const selectValue = scripts[i] || select.value;
-    select.value = selectValue; // update selected item
-
-    const outputDiv = new OutputDiv(select, outputText);
-    page.outputDivs.push(outputDiv);
-
-    // For each selector, run the conversion when new language is chosen.
-    select.addEventListener('change', () => {
-      runAllItrans();
+    const urlParams = new URLSearchParams(window.location.search);
+    const scriptsIn = urlParams.get(URL_PARAM_SCRIPTS);
+    let scripts = scriptsIn ? scriptsIn.split(',') : [];
+    // Script name args omit # character constants.LANGUAGE_PREFIX, add it back.
+    scripts = scripts.map((s) => {
+        if (s !== UNICODE_NAMES_OPTION.value) {
+            s = constants.LANGUAGE_PREFIX + s;
+        }
+        return s;
     });
 
-    // Add copy to clipboard button for this output textarea
-    output.querySelector('.' + COPY_BUTTON_CLASS).
-      addEventListener('click', () => {
-        outputText.select();
-        document.execCommand("copy");
-      }, false);
-  }
+    // Remove invalid script names.
+    scripts = scripts.filter((script) => {
+        const table = page.itrans.itransTable;
+        const help =
+            'Valid names are in default page dropdown list. ' +
+            'Do not include the first # character.\n' +
+            '"unicode-names" is also a valid name.';
+        const pass =
+            table.isLanguage(script) || script === UNICODE_NAMES_OPTION.value;
+        if (!pass) {
+            const msg =
+                'Invalid language script name in URL "' +
+                script +
+                '"\n\n' +
+                help;
+            alert(msg);
+            console.assert(false, msg);
+        }
+        return pass;
+    });
+
+    // number of output textareas sections to use
+    let useCount = outputs.length;
+    if (scriptsIn) {
+        useCount = Math.min(useCount, scripts.length);
+        console.log(
+            'URL scripts',
+            scripts,
+            ', useCount',
+            useCount,
+            ', outputs.length',
+            outputs.length
+        );
+    }
+    // remove any extra output sections on the web page
+    if (outputs.length > useCount) {
+        // HTMLCollection length cannot be reset, so have to loop and remove.
+        const originalLength = outputs.length;
+        for (let i = useCount; i < originalLength; ++i) {
+            outputs[useCount].remove(); // each remove changes HTMLCollection length.
+        }
+    }
+
+    for (let i = 0; i < useCount; i++) {
+        const output = outputs[i];
+        const select = output.getElementsByTagName('select')[0]; // only 1 descendant of this type expected
+        const outputText = output.getElementsByTagName('textarea')[0];
+
+        // Adds all the languages available in the spreadsheet.
+        setupLanguagesList(select, page.itrans.itransTable.languages);
+        const selectValue = scripts[i] || select.value;
+        select.value = selectValue; // update selected item
+
+        const outputDiv = new OutputDiv(select, outputText);
+        page.outputDivs.push(outputDiv);
+
+        // For each selector, run the conversion when new language is chosen.
+        select.addEventListener('change', () => {
+            runAllItrans();
+        });
+
+        // Add copy to clipboard button for this output textarea
+        output.querySelector('.' + COPY_BUTTON_CLASS).addEventListener(
+            'click',
+            () => {
+                outputText.select();
+                document.execCommand('copy');
+            },
+            false
+        );
+    }
 }
 
 /**
@@ -297,23 +333,23 @@ function setupOutputDivs() {
  * @param {Itrans} [tempItrans] - used to print more stats about loaded table.
  */
 function showTsvLoadedMessage(message, tempItrans) {
-  // itrans spreadsheet loaded file status messages shown in this web element
-  page.tsvLoadedMessage = document.getElementById(TSV_INPUT_MESSAGE_ID);
+    // itrans spreadsheet loaded file status messages shown in this web element
+    page.tsvLoadedMessage = document.getElementById(TSV_INPUT_MESSAGE_ID);
 
-  if (!page.tsvLoadedMessage) {
-    console.warn('Missing output message element', TSV_INPUT_MESSAGE_ID);
-    return;
-  }
-  const out = message + '<br>';
-  let langs = 0;
-  let rows = 0;
-  if (tempItrans) {
-    const table = tempItrans.itransTable;
-    langs = table.languages.length;
-    rows = table.itransRows.length;
-  }
-  page.tsvLoadedMessage.innerHTML =
-    out + langs + ' languages/scripts, ' + rows + ' rows.';
+    if (!page.tsvLoadedMessage) {
+        console.warn('Missing output message element', TSV_INPUT_MESSAGE_ID);
+        return;
+    }
+    const out = message + '<br>';
+    let langs = 0;
+    let rows = 0;
+    if (tempItrans) {
+        const table = tempItrans.itransTable;
+        langs = table.languages.length;
+        rows = table.itransRows.length;
+    }
+    page.tsvLoadedMessage.innerHTML =
+        out + langs + ' languages/scripts, ' + rows + ' rows.';
 }
 
 /**
@@ -328,20 +364,20 @@ function showTsvLoadedMessage(message, tempItrans) {
  *     If an error occurs, reset() will be called on it.
  */
 function loadItransTsvTable(tsvString, name, formId) {
-  // Create a temp itrans object and if it loads correctly, start using it.
-  const tempItrans = new Itrans();
-  try {
-    tempItrans.load(tsvString);
-    page.itrans = tempItrans;
-    showTsvLoadedMessage('Loaded: ' + name, page.itrans);
-  } catch(err) {
-    const message = 'Error: ' + name + ' has invalid itrans data: ' + err;
-    if (formId) {
-      formId.reset();
+    // Create a temp itrans object and if it loads correctly, start using it.
+    const tempItrans = new Itrans();
+    try {
+        tempItrans.load(tsvString);
+        page.itrans = tempItrans;
+        showTsvLoadedMessage('Loaded: ' + name, page.itrans);
+    } catch (err) {
+        const message = 'Error: ' + name + ' has invalid itrans data: ' + err;
+        if (formId) {
+            formId.reset();
+        }
+        showTsvLoadedMessage(message, undefined);
+        alert(message);
     }
-    showTsvLoadedMessage(message, undefined);
-    alert(message);
-  }
 }
 
 /**
@@ -357,11 +393,11 @@ function loadItransTsvTable(tsvString, name, formId) {
  *     If an error occurs, reset() will be called on it.
  */
 function loadTableAndSetupOutputDivs(tsvString, name, formId) {
-  loadItransTsvTable(tsvString, name, formId);
-  // All data now available, including ItransTable
-  // Prepare the language output script textareas
-  // Also fill the select scripts dropdown with the supported script names
-  setupOutputDivs();
+    loadItransTsvTable(tsvString, name, formId);
+    // All data now available, including ItransTable
+    // Prepare the language output script textareas
+    // Also fill the select scripts dropdown with the supported script names
+    setupOutputDivs();
 }
 
 /**
@@ -375,36 +411,52 @@ function loadTableAndSetupOutputDivs(tsvString, name, formId) {
  * @param {object} formId - web form that includes the fileId element.
  */
 function loadCustomTsvFile(fileId, formId) {
-  if (!fileId || !fileId.files) {
-    return;
-  }
+    if (!fileId || !fileId.files) {
+        return;
+    }
 
-  if (!(window && window.File && window.FileReader && window.FileList && window.Blob)) {
-    formId.reset();
-    alert('Error: This browser does not support file loading (old browser?).');
-    return;
-  }
+    if (
+        !(
+            window &&
+            window.File &&
+            window.FileReader &&
+            window.FileList &&
+            window.Blob
+        )
+    ) {
+        formId.reset();
+        alert(
+            'Error: This browser does not support file loading (old browser?).'
+        );
+        return;
+    }
 
-  const file = fileId.files[0];
-  const {name, type, size} = file || {};
-  console.log('Got loadData file', name, type, size);
-  if (type && !type.startsWith('text')) {
-    // Sometimes type is undefined, so skip this check in that case.
-    formId.reset();
-    alert('Error: File "' + name + '" is not a text file.');
-    return;
-  }
-  if (size > MAX_TSV_SIZE) {
-    formId.reset();
-    alert('Error: File "' + name + '" is too large. Over ' + MAX_TSV_SIZE/1000 + 'k.');
-    return;
-  }
-  const reader = new FileReader();
-  reader.readAsText(file);
-  reader.onload = ( (event) => {
-    const data = event.target.result;
-    loadTableAndSetupOutputDivs(data, name, formId);
-  });
+    const file = fileId.files[0];
+    const { name, type, size } = file || {};
+    console.log('Got loadData file', name, type, size);
+    if (type && !type.startsWith('text')) {
+        // Sometimes type is undefined, so skip this check in that case.
+        formId.reset();
+        alert('Error: File "' + name + '" is not a text file.');
+        return;
+    }
+    if (size > MAX_TSV_SIZE) {
+        formId.reset();
+        alert(
+            'Error: File "' +
+                name +
+                '" is too large. Over ' +
+                MAX_TSV_SIZE / 1000 +
+                'k.'
+        );
+        return;
+    }
+    const reader = new FileReader();
+    reader.readAsText(file);
+    reader.onload = (event) => {
+        const data = event.target.result;
+        loadTableAndSetupOutputDivs(data, name, formId);
+    };
 }
 
 /**
@@ -420,51 +472,57 @@ function loadCustomTsvFile(fileId, formId) {
  *
  */
 function setupInputText() {
-  // itrans input text is entered here by the user
-  page.inputTextElem = document.getElementById(INPUT_ID);
+    // itrans input text is entered here by the user
+    page.inputTextElem = document.getElementById(INPUT_ID);
 
-  if (!page.inputTextElem) {
-    alert('Page invalid: required input element missing: id: ' + INPUT_ID);
-    return;
-  }
-
-  // This script waits for pauses between user keypresses,
-  // and converts itrans text during the pause after this timer fires.
-  const doneTypingInterval = 1000; // time in ms
-  let typingTimer; // timer identifier, common to all events
-  page.inputTextElem.addEventListener('input', () => {
-    clearTimeout(typingTimer);
-    typingTimer = setTimeout(() => {
-      console.log('timer inputTextElem ' + page.inputTextElem);
-      runAllItrans();
-    }, doneTypingInterval);
-  });
-
-  const inputForm = document.getElementById(INPUT_FORM_ID);
-  const clearButton = document.getElementById(INPUT_CLEAR_ID);
-  if (clearButton) {
-    clearButton.addEventListener('click', () => {
-      if (inputForm) {
-        inputForm.reset();
-      }
-      page.inputTextElem.value = '';
-      console.log('clear button inputTextElem ' + page.inputTextElem);
-      runAllItrans();
-   });
-  }
-  // Load file into itrans input area
-  const fileInput = document.getElementById(INPUT_FILE_ID);
-  if (fileInput) {
-    if (!inputForm) {
-      alert('Page invalid: required form missing : id: ' + INPUT_FORM_ID);
-      return;
+    if (!page.inputTextElem) {
+        alert('Page invalid: required input element missing: id: ' + INPUT_ID);
+        return;
     }
 
-    fileInput.addEventListener('change', () => {
-      console.log('load input file inputTextElem ' + page.inputTextElem);
-      loadInputFile(fileInput, inputForm);
-    }, false);
-  }
+    // This script waits for pauses between user keypresses,
+    // and converts itrans text during the pause after this timer fires.
+    const doneTypingInterval = 1000; // time in ms
+    let typingTimer; // timer identifier, common to all events
+    page.inputTextElem.addEventListener('input', () => {
+        clearTimeout(typingTimer);
+        typingTimer = setTimeout(() => {
+            console.log('timer inputTextElem ' + page.inputTextElem);
+            runAllItrans();
+        }, doneTypingInterval);
+    });
+
+    const inputForm = document.getElementById(INPUT_FORM_ID);
+    const clearButton = document.getElementById(INPUT_CLEAR_ID);
+    if (clearButton) {
+        clearButton.addEventListener('click', () => {
+            if (inputForm) {
+                inputForm.reset();
+            }
+            page.inputTextElem.value = '';
+            console.log('clear button inputTextElem ' + page.inputTextElem);
+            runAllItrans();
+        });
+    }
+    // Load file into itrans input area
+    const fileInput = document.getElementById(INPUT_FILE_ID);
+    if (fileInput) {
+        if (!inputForm) {
+            alert('Page invalid: required form missing : id: ' + INPUT_FORM_ID);
+            return;
+        }
+
+        fileInput.addEventListener(
+            'change',
+            () => {
+                console.log(
+                    'load input file inputTextElem ' + page.inputTextElem
+                );
+                loadInputFile(fileInput, inputForm);
+            },
+            false
+        );
+    }
 }
 
 /**
@@ -473,37 +531,43 @@ function setupInputText() {
  * It loads itrans tsv data and sets up the input and output web page elements.
  */
 function setupWebPage() {
+    setupInputText();
 
-  setupInputText();
+    // Setup listener to load custom spreadsheet TSV text data file
+    const dataFileInput = document.getElementById(TSV_INPUT_ID);
+    if (dataFileInput) {
+        // dataFileForm is form with input field to load custom data file
+        const dataFileForm = document.getElementById(TSV_FORM_ID);
+        if (!dataFileForm) {
+            alert('Page invalid: required form missing : id: ' + TSV_FORM_ID);
+            return;
+        }
 
-  // Setup listener to load custom spreadsheet TSV text data file
-  const dataFileInput = document.getElementById(TSV_INPUT_ID);
-  if (dataFileInput) {
-    // dataFileForm is form with input field to load custom data file
-    const dataFileForm = document.getElementById(TSV_FORM_ID);
-    if (!dataFileForm) {
-      alert('Page invalid: required form missing : id: ' + TSV_FORM_ID);
-      return;
+        dataFileInput.addEventListener(
+            'change',
+            () => {
+                loadCustomTsvFile(dataFileInput, dataFileForm);
+            },
+            false
+        );
     }
 
-    dataFileInput.addEventListener('change', () => {
-      loadCustomTsvFile(dataFileInput, dataFileForm);
-    }, false);
+    // Setup listener for reset button to reload default itrans TSV data.
+    const dataFileReset = document.getElementById(TSV_INPUT_RESET_ID);
+    if (dataFileReset) {
+        dataFileReset.addEventListener(
+            'click',
+            () => {
+                loadTableAndSetupOutputDivs(DEFAULT_TSV, 'Default', null);
+            },
+            false
+        );
+    }
 
-  }
+    // Load the default itrans conversion table data.
+    loadTableAndSetupOutputDivs(DEFAULT_TSV, 'Default', null);
 
-  // Setup listener for reset button to reload default itrans TSV data.
-  const dataFileReset = document.getElementById(TSV_INPUT_RESET_ID);
-  if (dataFileReset) {
-    dataFileReset.addEventListener('click', () => {
-      loadTableAndSetupOutputDivs(DEFAULT_TSV, 'Default', null);
-    }, false);
-  }
-
-  // Load the default itrans conversion table data.
-  loadTableAndSetupOutputDivs(DEFAULT_TSV, 'Default', null);
-
-  console.log('Ready for interactive itrans use.');
+    console.log('Ready for interactive itrans use.');
 }
 
 // Run the function to setup the web interaction.

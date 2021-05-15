@@ -1,278 +1,425 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
+    <head>
+        <!-- Basic Page Needs ======================================= -->
+        <meta charset="utf-8" />
+        <title>Online Interface to ITRANS</title>
+        <meta
+            name="description"
+            Content="Online Interface to ITRANS - text to Unicode conversion package."
+        />
+        <meta name="author" content="Avinash Chopde" />
+        <meta name="contact" content="avinash@aczoom.com" />
 
-  <!-- Basic Page Needs ======================================= -->
-  <meta charset="utf-8">
-  <title>Online Interface to ITRANS</title>
-  <meta name="description" Content="Online Interface to ITRANS - text to Unicode conversion package.">
-  <meta name="author" content="Avinash Chopde">
-  <meta name="contact" content="avinash@aczoom.com">
-
-  <meta name="keywords" Content="ITRANS, Indian Languages, Indian Scripts,
+        <meta
+            name="keywords"
+            Content="ITRANS, Indian Languages, Indian Scripts,
         Hindi, Marathi, Sanskrit, Devanagari, Telugu, Bengali, Gujarati,
-	Tamil, Gurmukhi, Malayalam, Oriya, Grantha, Romanized Sanskrit">
+	Tamil, Gurmukhi, Malayalam, Oriya, Grantha, Romanized Sanskrit"
+        />
 
-  <!-- Mobile Specific Metas ================================== -->
-  <meta name="viewport" content="width=device-width, initial-scale=1">
+        <!-- Mobile Specific Metas ================================== -->
+        <meta name="viewport" content="width=device-width, initial-scale=1" />
 
-  <!-- FONT =================================================== -->
-  <!-- <link href="http://fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css"> -->
+        <!-- FONT =================================================== -->
+        <!-- <link href="http://fonts.googleapis.com/css?family=Raleway:400,300,600" rel="stylesheet" type="text/css"> -->
 
-  <!-- CSS ==================================================== -->
-  <link rel="stylesheet" href="css/normalize.css">
-  <link rel="stylesheet" href="css/skeleton.css">
-  <link rel="stylesheet" href="css/itrans.css">
+        <!-- CSS ==================================================== -->
+        <link rel="stylesheet" href="css/normalize.css" />
+        <link rel="stylesheet" href="css/skeleton.css" />
+        <link rel="stylesheet" href="css/itrans.css" />
 
-  <!-- Javascript ============================================= -->
-  <script src="dist/itrans_bundle.js?v=0.3.3"></script> <!-- uses DOM elements of this page -->
+        <!-- Javascript ============================================= -->
+        <script src="dist/itrans_bundle.js?v=0.3.3"></script>
+        <!-- uses DOM elements of this page -->
 
-  <!-- Favicon ================================================ -->
-  <!-- <link rel="icon" type="image/png" href="/favicon.png"> -->
-  <link rel="icon" type="image/x-icon" href="/favicon.ico">
-  <link rel="shortcut icon" href="/favicon.ico">
+        <!-- Favicon ================================================ -->
+        <!-- <link rel="icon" type="image/png" href="/favicon.png"> -->
+        <link rel="icon" type="image/x-icon" href="/favicon.ico" />
+        <link rel="shortcut icon" href="/favicon.ico" />
+    </head>
+    <body>
+        <!-- Primary Page Layout ==================================== -->
 
-</head>
-<body>
+        <div class="container">
+            <!-- columns should be the immediate child of a .row -->
 
-<!-- Primary Page Layout ==================================== -->
+            <TABLE>
+                <TR>
+                    <TD>
+                        <A HREF="http://www.aczoom.com/" TARGET="_top"
+                            >ACZoom Home</A
+                        >
+                    </TD>
+                    <TD>
+                        <A HREF="http://www.aczoom.com/email.html" TARGET="_top"
+                            >E-mail</A
+                        >
+                    </TD>
+                    <TD>
+                        <A HREF="http://www.aczoom.com/itrans/" TARGET="_top"
+                            >ITRANS</A
+                        >
+                    </TD>
+                    <TD>
+                        <A HREF="http://www.aczoom.com/isongs/" TARGET="_top"
+                            >ITRANS Song Book</A
+                        >
+                    </TD>
+                </TR>
+            </TABLE>
 
-<div class="container">
-  <!-- columns should be the immediate child of a .row -->
+            <h4>Online Interface to Itrans</h4>
+            <p>Text to Unicode converter</p>
 
-  <TABLE>
-    <TR>
-      <TD>
-        <A HREF="http://www.aczoom.com/" TARGET="_top">ACZoom Home</A>
-      </TD>
-      <TD>
-        <A HREF="http://www.aczoom.com/email.html" TARGET="_top">E-mail</A>
-      </TD>
-      <TD>
-        <A HREF="http://www.aczoom.com/itrans/" TARGET="_top">ITRANS</A>
-      </TD>
-      <TD>
-        <A HREF="http://www.aczoom.com/isongs/" TARGET="_top">ITRANS Song Book</A>
-      </TD>
-    </TR>
-  </TABLE>
+            <div class="row">
+                <div class="six columns">
+                    <!-- div#c-input contains a form, with a textarea for input, load and clear buttons -->
+                    <form class="c-input" id="i-input-form">
+                        <label for="i-input-text">Enter itrans input:</label>
+                        <textarea
+                            id="i-input-text"
+                            placeholder="Type here: a aa | ka kSha | sa.nskRRit | ..."
+                            autocomplete="off"
+                            autocorrect="off"
+                            autocapitalize="off"
+                            spellcheck="false"
+                        ></textarea>
+                        <br />
+                        <label for="i-input-file" class="button button-primary"
+                            >Load file</label
+                        >
+                        <input
+                            type="file"
+                            id="i-input-file"
+                            class="c-hide button button-primary"
+                        /><!--hidden by css-->
+                        <button
+                            class="u-pull-right"
+                            id="i-input-clear"
+                            type="button"
+                            value="Clear"
+                        >
+                            Clear
+                        </button>
+                    </form>
+                    <br class="u-cf" />
+                    <a
+                        href="https://docs.google.com/spreadsheets/d/14wZl8zCa4khZV3El2VGoqurKBLGx21mbS-yORi4w7Qo/edit?usp=sharing"
+                        >Spreadsheet with all itrans input codes</a
+                    >
+                    <br />
+                    <a href="#example">Example itrans input text and output</a>
+                </div>
 
-  <h4>Online Interface to Itrans</h4>
-  <p>Text to Unicode converter</p>
+                <div class="six columns c-output">
+                    <label for="i-sel-1">Default output:</label>
+                    <select id="i-sel-1">
+                        <!-- only need the selected language, other languages will be added automatically -->
+                        <option value="#sanskrit" selected>#sanskrit</option>
+                    </select>
+                    <button class="copy-button u-pull-right" type="button">
+                        <img
+                            class="copy-icon"
+                            src="images/copy-icon.svg"
+                            alt="Copy"
+                            title="Copy"
+                        />
+                    </button>
+                    <br />
+                    <textarea
+                        placeholder="Converted text will be displayed here..."
+                        readonly
+                    ></textarea>
+                </div>
+            </div>
 
-  <div class="row">
-    <div class="six columns">
-      <!-- div#c-input contains a form, with a textarea for input, load and clear buttons -->
-      <form class="c-input" id="i-input-form">
-        <label for="i-input-text">Enter itrans input:</label>
-        <textarea id="i-input-text" placeholder="Type here: a aa | ka kSha | sa.nskRRit | ..."
-          autocomplete="off" autocorrect="off" autocapitalize="off" spellcheck="false"></textarea>
-        <br>
-        <label for="i-input-file" class="button button-primary">Load file</label>
-        <input type="file" id="i-input-file" class="c-hide button button-primary"><!--hidden by css-->
-        <button class="u-pull-right" id="i-input-clear" type="button" value="Clear">Clear</button>
-      </form>
-      <br class="u-cf">
-      <a href="https://docs.google.com/spreadsheets/d/14wZl8zCa4khZV3El2VGoqurKBLGx21mbS-yORi4w7Qo/edit?usp=sharing">Spreadsheet with all itrans input codes</a>
-      <br>
-      <a href="#example">Example itrans input text and output</a>
-    </div>
+            <div class="row">
+                <div class="six columns c-output">
+                    <label for="i-sel-2">Default output:</label>
+                    <select id="i-sel-2">
+                        <!-- only need the selected language, other languages will be added automatically -->
+                        <option value="#telugu" selected>#telugu</option>
+                    </select>
+                    <button class="copy-button u-pull-right" type="button">
+                        <img
+                            class="copy-icon"
+                            src="images/copy-icon.svg"
+                            alt="Copy"
+                            title="Copy"
+                        />
+                    </button>
+                    <br />
+                    <textarea
+                        placeholder="Converted text will be displayed here..."
+                        readonly
+                    ></textarea>
+                </div>
 
-    <div class="six columns c-output">
-      <label for="i-sel-1">Default output:</label>
-      <select id="i-sel-1">
-        <!-- only need the selected language, other languages will be added automatically -->
-        <option value="#sanskrit" selected>#sanskrit</option>
-      </select>
-      <button class="copy-button u-pull-right" type="button">
-        <img class="copy-icon" src="images/copy-icon.svg" alt="Copy" title="Copy"/>
-      </button>
-      <br>
-      <textarea placeholder="Converted text will be displayed here..." readonly></textarea>
-    </div>
-  </div>
+                <div class="six columns c-output">
+                    <label for="i-sel-3">Default output:</label>
+                    <select id="i-sel-3">
+                        <!-- only need the selected language, other languages will be added automatically -->
+                        <option value="unicode-names" selected>
+                            Unicode Names
+                        </option>
+                    </select>
+                    <button class="copy-button u-pull-right" type="button">
+                        <img
+                            class="copy-icon"
+                            src="images/copy-icon.svg"
+                            alt="Copy"
+                            title="Copy"
+                        />
+                    </button>
+                    <br />
+                    <textarea
+                        placeholder="Converted text will be displayed here..."
+                        readonly
+                    ></textarea>
+                </div>
+            </div>
 
-  <div class="row">
-    <div class="six columns c-output">
-      <label for="i-sel-2">Default output:</label>
-      <select id="i-sel-2">
-        <!-- only need the selected language, other languages will be added automatically -->
-        <option value="#telugu" selected>#telugu</option>
-      </select>
-      <button class="copy-button u-pull-right" type="button">
-        <img class="copy-icon" src="images/copy-icon.svg" alt="Copy" title="Copy"/>
-      </button>
-      <br>
-      <textarea placeholder="Converted text will be displayed here..." readonly></textarea>
-    </div>
+            <hr />
 
-    <div class="six columns c-output">
-      <label for="i-sel-3">Default output:</label>
-      <select id="i-sel-3">
-        <!-- only need the selected language, other languages will be added automatically -->
-        <option value="unicode-names" selected>Unicode Names</option>
-      </select>
-      <button class="copy-button u-pull-right" type="button">
-        <img class="copy-icon" src="images/copy-icon.svg" alt="Copy" title="Copy"/>
-      </button>
-      <br>
-      <textarea placeholder="Converted text will be displayed here..." readonly></textarea>
-    </div>
-  </div>
+            <!-- =========================================================== -->
+            <form id="i-data">
+                <div class="row">
+                    <div class="twelve columns">
+                        <b>Customize the character mapping</b>
+                        <div id="i-data-msg">
+                            <!-- load message - success, failure -->
+                        </div>
+                    </div>
+                </div>
+                <br clear="all" />
+                <div class="row">
+                    <div class="eight columns">
+                        <input
+                            type="file"
+                            id="i-data-input"
+                            class="c-hide button button-primary"
+                        /><!--hidden by css-->
+                        <label for="i-data-input" class="button button-primary"
+                            >Load tab-separated itrans data file</label
+                        >
+                    </div>
+                    <div class="four columns">
+                        <input
+                            type="button"
+                            class="button"
+                            value="Load default"
+                            id="i-data-input-reset"
+                        />
+                    </div>
+                </div>
+            </form>
+            <div class="row">
+                <div class="twelve columns">
+                    Here's the
+                    <a
+                        href="https://docs.google.com/spreadsheets/d/14wZl8zCa4khZV3El2VGoqurKBLGx21mbS-yORi4w7Qo/edit?usp=sharing"
+                        >default spreadsheet for itrans conversion</a
+                    >.
+                    <br />
+                    There are cells with explanation notes in the spreadsheet.
+                    Additional help is available at the
+                    <a href="customize.html">customize this package</a> page.
+                </div>
+            </div>
 
-  <hr>
+            <p></p>
+            <hr />
 
-  <!-- =========================================================== -->
-  <form id="i-data">
-    <div class="row">
-      <div class="twelve columns">
-        <b>Customize the character mapping</b>
-        <div id="i-data-msg"><!-- load message - success, failure --></div>
-      </div>
-    </div>
-    <br clear="all">
-    <div class="row">
-      <div class="eight columns">
-        <input type="file" id="i-data-input" class="c-hide button button-primary"><!--hidden by css-->
-        <label for="i-data-input" class="button button-primary">Load tab-separated itrans data file</label>
-      </div>
-      <div class="four columns">
-        <input type="button" class="button" value="Load default" id="i-data-input-reset">
-      </div>
-    </div>
-  </form>
-  <div class="row">
-    <div class="twelve columns">
-       Here's the <a href="https://docs.google.com/spreadsheets/d/14wZl8zCa4khZV3El2VGoqurKBLGx21mbS-yORi4w7Qo/edit?usp=sharing">default spreadsheet for itrans conversion</a>.
-        <br>
-        There are cells with explanation notes in the spreadsheet. Additional help is
-        available at the <a href="customize.html">customize this package</a> page.
-    </div>
-  </div>
-
-  <p>
-  <hr>
-
-  <!-- =========================================================== -->
-  <div class="row">
-    <div class="twelve columns">
-      <h4 id="example">Example</h4>
-      <!--
+            <!-- =========================================================== -->
+            <div class="row">
+                <div class="twelve columns">
+                    <h4 id="example">Example</h4>
+                    <!--
       This is a new package, and should work with latest versions of most web browsers.
       It works with the latest
       <a href="https://www.google.com/chrome/browser/desktop/">Chrome web browser</a>
       and
       <a href="https://www.microsoft.com/en-us/windows/microsoft-edge">Microsoft Edge web browser</a>.
       -->
-      <p>
-      <b>Note</b>: itrans uses a precise mapping of input codes to output code. It is not a phonetic
-      conversion system, nor is it meant to be. (There are many other systems that do that.)
-      Itrans is a table-driven, customizable mapping of input words to any Unicode character
-      sequence.
-      </p>
-    </div>
-  </div>
-  <div class="row">
-    <div class="six columns">
-      Enter this example text in the <em>Enter itrans input</em> box above:
-      <p><pre>
+                    <p>
+                        <b>Note</b>: itrans uses a precise mapping of input
+                        codes to output code. It is not a phonetic conversion
+                        system, nor is it meant to be. (There are many other
+                        systems that do that.) Itrans is a table-driven,
+                        customizable mapping of input words to any Unicode
+                        character sequence.
+                    </p>
+                </div>
+            </div>
+            <div class="row">
+                <div class="six columns">
+                    Enter this example text in the
+                    <em>Enter itrans input</em> box above:
+                    <p></p>
+                    <pre>
 a aa | ka kSha || sa.nskRRit
 cha{nukta} 0 9  Tha.N na.n OM
 #telugu ka kha ## Toggle itrans mode
 #oriya ka kha
 #sanskrit dil  #hindi dil
-{skier} {face-frown} {face-grin}</pre>
-      The above text shows these features:
-      <ul>
-        <li>vowels such as <code>a aa</code>, consonants such as <code>ka Kha</code></li>
-        <li>Unicode code points such as <code>{nukta}</code></li>
-        <li>explicit language markers such as <code>#telugu</code></li>
-        <li>schwa deletion in Hindi and corresponding sanskrit example: <code>dil</code></li>
-        <li>use of <code>##</code> to toggle off/on the itrans mode. The toggle will disable
-        itrans conversion, or use the last used language marker for itrans conversion,
-        depending on whether it is the first ## or the second ## marker.</li>
-        <li>use of unicode names directly<code>{face-grin}</code></li>
-      </ul>
-    </div>
-    <div class="six columns">
-      The example text produces this output:
-      <img src="./images/example1.gif" alt="Example output" width="332" height="342"/>
-    </div>
-  </div>
-  <div class="row">
-    <div class="twelve columns">
-      <h4 id="more-examples">More Examples</h4>
-      <a href="https://docs.google.com/spreadsheets/d/14wZl8zCa4khZV3El2VGoqurKBLGx21mbS-yORi4w7Qo/edit?usp=sharing">Spreadsheet with all itrans input codes and unicode code point names</a>
-      <p>
-      Try these other examples to see additional features. Copy each of these snippets
-      and enter it in the <em>Enter itrans input</em> box above.
-      </p>
-      <ul>
-        <li><code>#hindi ma shrii #kannada ta Ta</code>
-        <br>These language markers
-        (#hindi and #kannada) show that all the language column names
-        from the <a href="https://docs.google.com/spreadsheets/d/14wZl8zCa4khZV3El2VGoqurKBLGx21mbS-yORi4w7Qo/edit?usp=sharing">spreadsheet</a> or any custom loaded spreadsheet
-        can be explicity specified in the input text.</li>
-        <li>In addition to loading updated spreadsheet conversion tables, this entire
-        web page can be recreated and customized and hosted locally.
-        It requires coding, and familiarity with
-        Javascript, HTML, CSS, etc. Details are at the <a href="customize.html">customize this
-        package</a> page.</li>
-        <li>Tamil-Sanskrit: <code>#tamils ka kha khi khii khu khuu</code>
-        will work if entered like this.
-        But #tamils is not present in the default output dropdown list because there is no
-        font that fully supports Tamil-Sanskrit today. There are issues with rendering
-        the superscript (or subscript) correctly. It should appear after any dependent
-        vowels, which no font does today. Therefore, #tamils is only experimental at this
-        time and only available for manual testing as shown in this example.</li>
-      </ul>
-    </div>
-  </div>
-  <hr>
-  <p>
-  The source code for this client-side application is available
-  at <a href="https://github.com/avinash311/itrans">GitHub itrans</a> link.
-  It has the Javascript files, as well as this HTML web page and CSS files.
-  </p>
-  <p>
-  Please note that no technical support is available for this web page or for the tools on this web page.
-  <BR>
-  If you do find a bug (note that mapping issues may not be bugs, you can modify the mapping
-  and use a customized spreadsheet as described above), feel free to file it at the
-  <a href="https://github.com/avinash311/itrans/issues">GitHub itrans issues</a> page.
-  </p>
+{skier} {face-frown} {face-grin}</pre
+                    >
+                    The above text shows these features:
+                    <ul>
+                        <li>
+                            vowels such as <code>a aa</code>, consonants such as
+                            <code>ka Kha</code>
+                        </li>
+                        <li>
+                            Unicode code points such as <code>{nukta}</code>
+                        </li>
+                        <li>
+                            explicit language markers such as
+                            <code>#telugu</code>
+                        </li>
+                        <li>
+                            schwa deletion in Hindi and corresponding sanskrit
+                            example: <code>dil</code>
+                        </li>
+                        <li>
+                            use of <code>##</code> to toggle off/on the itrans
+                            mode. The toggle will disable itrans conversion, or
+                            use the last used language marker for itrans
+                            conversion, depending on whether it is the first ##
+                            or the second ## marker.
+                        </li>
+                        <li>
+                            use of unicode names directly<code
+                                >{face-grin}</code
+                            >
+                        </li>
+                    </ul>
+                </div>
+                <div class="six columns">
+                    The example text produces this output:
+                    <img
+                        src="./images/example1.gif"
+                        alt="Example output"
+                        width="332"
+                        height="342"
+                    />
+                </div>
+            </div>
+            <div class="row">
+                <div class="twelve columns">
+                    <h4 id="more-examples">More Examples</h4>
+                    <a
+                        href="https://docs.google.com/spreadsheets/d/14wZl8zCa4khZV3El2VGoqurKBLGx21mbS-yORi4w7Qo/edit?usp=sharing"
+                        >Spreadsheet with all itrans input codes and unicode
+                        code point names</a
+                    >
+                    <p>
+                        Try these other examples to see additional features.
+                        Copy each of these snippets and enter it in the
+                        <em>Enter itrans input</em> box above.
+                    </p>
+                    <ul>
+                        <li>
+                            <code>#hindi ma shrii #kannada ta Ta</code>
+                            <br />These language markers (#hindi and #kannada)
+                            show that all the language column names from the
+                            <a
+                                href="https://docs.google.com/spreadsheets/d/14wZl8zCa4khZV3El2VGoqurKBLGx21mbS-yORi4w7Qo/edit?usp=sharing"
+                                >spreadsheet</a
+                            >
+                            or any custom loaded spreadsheet can be explicity
+                            specified in the input text.
+                        </li>
+                        <li>
+                            In addition to loading updated spreadsheet
+                            conversion tables, this entire web page can be
+                            recreated and customized and hosted locally. It
+                            requires coding, and familiarity with Javascript,
+                            HTML, CSS, etc. Details are at the
+                            <a href="customize.html">customize this package</a>
+                            page.
+                        </li>
+                        <li>
+                            Tamil-Sanskrit:
+                            <code>#tamils ka kha khi khii khu khuu</code> will
+                            work if entered like this. But #tamils is not
+                            present in the default output dropdown list because
+                            there is no font that fully supports Tamil-Sanskrit
+                            today. There are issues with rendering the
+                            superscript (or subscript) correctly. It should
+                            appear after any dependent vowels, which no font
+                            does today. Therefore, #tamils is only experimental
+                            at this time and only available for manual testing
+                            as shown in this example.
+                        </li>
+                    </ul>
+                </div>
+            </div>
+            <hr />
+            <p>
+                The source code for this client-side application is available at
+                <a href="https://github.com/avinash311/itrans">GitHub itrans</a>
+                link. It has the Javascript files, as well as this HTML web page
+                and CSS files.
+            </p>
+            <p>
+                Please note that no technical support is available for this web
+                page or for the tools on this web page.
+                <BR />
+                If you do find a bug (note that mapping issues may not be bugs,
+                you can modify the mapping and use a customized spreadsheet as
+                described above), feel free to file it at the
+                <a href="https://github.com/avinash311/itrans/issues"
+                    >GitHub itrans issues</a
+                >
+                page.
+            </p>
 
-  <h4>Older itrans6 online web interface - no longer available.</h4>
-  <!--
+            <h4>Older itrans6 online web interface - no longer available.</h4>
+            <!--
   For the older itrans online interface visit the <a href="http://www.aczoom.com/itrans/online/itrans6/">itrans6 web server-based online interface</a>.
   -->
 
-  <hr>
+            <hr />
 
-  <div class="row">
-    <div class="twelve columns">
-      <TABLE>
-        <TR>
-          <TD>
-            <A HREF="http://www.aczoom.com/" TARGET="_top">ACZoom Home</A>
-          </TD>
-          <TD>
-            <A HREF="http://www.aczoom.com/email.html" TARGET="_top">E-mail</A>
-          </TD>
-          <TD>
-            <A HREF="http://www.aczoom.com/itrans/" TARGET="_top">ITRANS</A>
-          </TD>
-          <TD>
-            <A HREF="http://www.aczoom.com/isongs/" TARGET="_top">ITRANS Song Book</A>
-          </TD>
-        </TR>
-      </TABLE>
+            <div class="row">
+                <div class="twelve columns">
+                    <TABLE>
+                        <TR>
+                            <TD>
+                                <A HREF="http://www.aczoom.com/" TARGET="_top"
+                                    >ACZoom Home</A
+                                >
+                            </TD>
+                            <TD>
+                                <A
+                                    HREF="http://www.aczoom.com/email.html"
+                                    TARGET="_top"
+                                    >E-mail</A
+                                >
+                            </TD>
+                            <TD>
+                                <A
+                                    HREF="http://www.aczoom.com/itrans/"
+                                    TARGET="_top"
+                                    >ITRANS</A
+                                >
+                            </TD>
+                            <TD>
+                                <A
+                                    HREF="http://www.aczoom.com/isongs/"
+                                    TARGET="_top"
+                                    >ITRANS Song Book</A
+                                >
+                            </TD>
+                        </TR>
+                    </TABLE>
 
-      <hr>
-
-    </div>
-  </div>
-</div>
-<!-- End Document ============================================= -->
-</body>
+                    <hr />
+                </div>
+            </div>
+        </div>
+        <!-- End Document ============================================= -->
+    </body>
 </html>
